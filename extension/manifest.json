@@ -1,0 +1,23 @@
+{
+  "name": "AnticiClick",
+  "version": "0.1",
+  "description": "AnticiClick predicts the links you will click and prefetches them.",
+   "content_scripts": [ {
+      "all_frames": false,
+      "run_at": "document_end",
+      "js": [ "background-prefetch.js" ],
+      "matches": [ "http://*/*" ]
+   } ],
+   "icons": {
+      "128": "images/Icon-128.png",
+      "16": "images/Icon-16.png",
+      "32": "images/Icon-32.png",
+      "64": "images/Icon-64.png"
+   },
+  "browser_action": {
+   "default_icon": "images/Icon-128.png"
+  },
+  "background_page": "background.html",
+  "popup": "background.html",
+  "permissions": [ "cookies", "tabs", "http://*/*", "https://*/*" ]
+}
