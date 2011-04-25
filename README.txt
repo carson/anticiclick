@@ -1,0 +1,1 @@
+anticiclick is free software released under the GNU General Public License. See gpl.txt for more information.
