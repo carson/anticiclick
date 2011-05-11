@@ -1,5 +1,5 @@
 //
-// USER DATA IS STORED AT THE DIRECTRY
+// USER DATA IS STORED AT THE DIRECTRY (Vista or 7)
 // C:\Users\[username]\AppData\Local\Google\Chrome\User Data\Default\Local Storage
 //
 //
@@ -39,8 +39,8 @@ function getPosition(that) {
 
 
 /////////////////REINFORCEMENT LEARNING//////////////////////////
-var wsizeX=window.innerWidth, wsizeY=window.innerHeight, maxV = 40;
-var tilesizeX = 10, tilesizeY = 5, tilesizeV =2;
+var wsizeX=window.innerWidth, wsizeY=window.innerHeight, maxV = 32;
+var tilesizeX = 32, tilesizeY = 32, tilesizeV =16;
 var threshold = 0.1, alp = 0.1, gam = 0.9, reward = 1.0, nreward = -1.0;
 var px=0,pvx=0,py=0,pvy=0;
 function rLearning(cur){
@@ -98,16 +98,16 @@ function rLearning(cur){
     if(px+i>-1 && px+i<sizeX){
       for(j=Math.ceil(-tilesizeV);j<Math.floor(tilesizeV);j++){
         if(pvx+j>-1 && pvx+j<sizeV){
-          QV_X[px+i][pvx+j][ax] = (1-alp)*QV_X[px][pvx][ax]+alp*(gam*buf_maxX);
+          QV_X[px][pvx][ax] = (1-alp)*QV_X[px+i][pvx+j][ax]+alp*(gam*buf_maxX);
         }
       }
     }
   }
   for(i=Math.ceil(-tilesizeY);i<Math.floor(tilesizeY);i++){
-    if(py+i>-1 && py+j<sizeY){
+    if(py+i>-1 && py+i<sizeY){
       for(j=Math.ceil(-tilesizeV);j<Math.floor(tilesizeV);j++){
         if(pvy+j>-1 && pvy+j<sizeV){
-          QV_Y[py+i][pvy+j][ay] = (1-alp)*QV_Y[py][pvy][ay]+alp*(gam*buf_maxY);
+          QV_Y[py][pvy][ay] = (1-alp)*QV_Y[py+i][pvy+j][ay]+alp*(gam*buf_maxY);
         }
       }
     }
@@ -148,12 +148,14 @@ function minDis(ipt){
 function clickHandler(){
   var p;
   for(p=0;p<arraySize;p++){
-    if(cand_que[p]>-1 && cand_que[p]-this.num!=0){
-      QV_X[res_que[p][0]][res_que[p][1]][res_que[p][2]] = (1-alp)*QV_X[res_que[p][0]][res_que[p][1]][res_que[p][2]]+alp*(reward);
-      QV_Y[res_que[p][3]][res_que[p][4]][res_que[p][5]] = (1-alp)*QV_Y[res_que[p][3]][res_que[p][4]][res_que[p][5]]+alp*(reward);
-    } else {
-      QV_X[res_que[p][0]][res_que[p][1]][res_que[p][2]] = (1-alp)*QV_X[res_que[p][0]][res_que[p][1]][res_que[p][2]]+alp*(nreward);
-      QV_Y[res_que[p][3]][res_que[p][4]][res_que[p][5]] = (1-alp)*QV_Y[res_que[p][3]][res_que[p][4]][res_que[p][5]]+alp*(nreward);
+    if(cand_que[p]>-1) {
+      if(cand_que[p]-this.num!=0){
+        QV_X[res_que[p][0]][res_que[p][1]][res_que[p][2]] = (1-alp)*QV_X[res_que[p][0]][res_que[p][1]][res_que[p][2]]+alp*(reward);
+        QV_Y[res_que[p][3]][res_que[p][4]][res_que[p][5]] = (1-alp)*QV_Y[res_que[p][3]][res_que[p][4]][res_que[p][5]]+alp*(reward);
+      } else {
+        QV_X[res_que[p][0]][res_que[p][1]][res_que[p][2]] = (1-alp)*QV_X[res_que[p][0]][res_que[p][1]][res_que[p][2]]+alp*(nreward);
+        QV_Y[res_que[p][3]][res_que[p][4]][res_que[p][5]] = (1-alp)*QV_Y[res_que[p][3]][res_que[p][4]][res_que[p][5]]+alp*(nreward);
+      }
     }
   }
   click_result.push(this.num);
@@ -181,8 +183,8 @@ function setTableX() {
     for(j=0;j<sizeV;j++){
       QV_X[i][j] = new Array(sizeX);
       for(k=0;k<sizeX;k++){
-        //QV_X[i][j][k] = Math.random() * eps;
-        QV_X[i][j][k] = Math.pow(Math.E, -(k-i+10*j)*(k-i+10*j)) * eps;
+        QV_X[i][j][k] = Math.random() * eps;
+        //QV_X[i][j][k] = Math.pow(Math.E, -(k-i+10*j)*(k-i+10*j)) * eps;
       }
     }
   }
@@ -193,8 +195,8 @@ function setTableY() {
     for(j=0;j<sizeV;j++){
       QV_Y[i][j] = new Array(sizeY);
       for(k=0;k<sizeY;k++){
-        //QV_Y[i][j][k] = Math.random() * eps;
-        QV_Y[i][j][k] = Math.pow(Math.E, -(k-i+10*j)*(k-i+10*j)) * eps;
+        QV_Y[i][j][k] = Math.random() * eps;
+        //QV_Y[i][j][k] = Math.pow(Math.E, -(k-i+10*j)*(k-i+10*j)) * eps;
       }
     }
   }
@@ -260,7 +262,7 @@ var m=anchors.length;
 var n;
 var a_list = new Array();
 var buf_pos, cand, res, buf_res=0;
-var arraySize=100;
+var arraySize=10;
 var res_que = new Array(arraySize);
 var cand_que = new Array(arraySize);
 var vote_list = new Array(m);
@@ -268,7 +270,7 @@ for(n=0;n<vote_list.length;n++){
   vote_list[n] = 0;
 }
 
-var sizeX = 64, sizeY = 32;
+var sizeX = 64, sizeY = 64;
 var sizeV = 8;
 var i,j,k;
 var eps = 0.01;
