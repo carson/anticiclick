@@ -308,6 +308,10 @@ window.addEventListener('mousemove', function(evt) {
     res_que.push([rl_res.xx,rl_res.vx,rl_res.ax,rl_res.yy,rl_res.vy,rl_res.ay]);
     res_que.shift();
     
+    //Add the scroll offset
+    rl_res.ax = rl_res.ax+Math.floor(window.pageXOffset*sizeX/wsizeX);
+    rl_res.ay = rl_res.ay+Math.floor(window.pageYOffset*sizeY/wsizeY);
+    
     cand = minDis(rl_res);
     
     //anchors[cand].style.backgroundColor="black";
@@ -317,9 +321,13 @@ window.addEventListener('mousemove', function(evt) {
     if(cand_que[0]>-1){
       vote_list[cand_que.shift()]--;
       res = 0;
-      for(n=0;n<vote_list.length;n++){
-        if(vote_list[n]>vote_list[res]) res = n;
-      }
+      
+      //Discussion: Is the voting valid for select X-Y point?
+      //for(n=0;n<vote_list.length;n++){
+      //  if(vote_list[n]>vote_list[res]) res = n;
+      //}
+      res = cand_que[cand_que.length-1];  //or Simply select the latest result
+      
       if(res-buf_res!=0){
         anchors[buf_res].style.backgroundColor="";
         anchors[buf_res].style.color="";
